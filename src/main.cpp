@@ -4,11 +4,13 @@
 int main(){   
     Image myImage(100, 100, Pixel{255,0,0});
     //width height color image;
-    Image demo("sampleImage.ppm")
+    Image demo;
+    demo.load("sampleImage.ppm")
     //filename of the image you want to be used
 
     applyInvert(demo);
     //invert filter applied
-
-    demo.bake("destinationfilename.ppm");
+    demo.putPixel(10, 200, Pixel{255,0,0});
+    
+    demo.bake("destination/filename.ppm");
 }
