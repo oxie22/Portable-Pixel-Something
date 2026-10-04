@@ -1,6 +1,6 @@
 # PortablePixelSomething
 ## A lightweight c++ image and animation rendering library from scratch.
-<img width="462" height="49" alt="ppsomething-export" src="https://github.com/user-attachments/assets/b7b22f14-5ae0-4ffc-8937-1b8cf2821ffc" />
+<img width="462" height="49" alt="ppsomething" src="images/ppsomething-readme.png" />
 
 This project handles raw pixel buffers and uses the [Netpbm](https://en.wikipedia.org/wiki/Netpbm) Portable Pixel Map format to modify images,
 and uses FFmpeg to convert them back to png or the frames exported into mp4.
