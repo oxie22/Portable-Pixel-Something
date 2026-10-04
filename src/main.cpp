@@ -2,12 +2,13 @@
 #include "image.h"
 #include "filter.h"
 int main(){   
-    // Image my_img("main.ppm");
-    // Pixel p{20, 200, 22};
-    // my_img.putPixel(0, 3, Pixel{69, 69, 69});
-    // my_img.bake("main2.ppm");
-    Image test("../images/todo.ppm");
-    applyInvert(test);
-    test.bake("../images/test.ppm");
+    Image myImage(100, 100, Pixel{255,0,0});
+    //width height color image;
+    Image demo("sampleImage.ppm")
+    //filename of the image you want to be used
 
+    applyInvert(demo);
+    //invert filter applied
+
+    demo.bake("destinationfilename.ppm");
 }
