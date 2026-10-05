@@ -5,7 +5,10 @@
 #include <cstdint>
 #include <vector>
 #include <fstream>
+#include <filesystem>
+#include <cstdlib>
 
+namespace fs = std::filesystem;
 
 Pixel::Pixel(uint8_t red, uint8_t green, uint8_t blue): r(red), g(green), b(blue) {}
 
@@ -13,12 +16,16 @@ std::ostream& operator<< (std::ostream& os, const Pixel& obj){
     os << (int)obj.r << ' ' << (int)obj.g << ' ' << (int)obj.b << ' ';
     return os;
 }
+
+Image::Image(): width(0), height(0) {}
 Image::Image(int w, int h, Pixel color): width(w), height(h), pixels(w*h, color) {}
 
-Image::Image(const char* cstr_filepath){
-    std::ifstream imgFile(cstr_filepath, std::ios::binary);
-    if(!imgFile.is_open()) return;
-
+bool Image::load(const std::string& filepath){
+    std::ifstream imgFile(filepath, std::ios::binary);
+    if(!imgFile.is_open()){
+        std::cerr << "Error [load]: Failed to open file at filepath" << filepath << "\n";
+        return false;
+    }
     std::string dummy;
     imgFile >> dummy >> width >> height >> dummy;
     
@@ -27,20 +34,25 @@ Image::Image(const char* cstr_filepath){
     pixels.resize(width * height);
     
     imgFile.read(reinterpret_cast<char*>(pixels.data()), width * height * 3);
+    return true;
 }
-    
-void Image::bake(std::string filepath){
-    std::ofstream imgFile(filepath);
-    int count = 0;
-    imgFile << "P3\n" << width << " " << height << "\n255\n";
-    for(const Pixel& p : pixels){
-        imgFile << p;
-        count++;
-        if(count % width == 0)
-            imgFile << '\n';
-        else
-            imgFile << '\t';
+
+bool Image::bake(const std::string& filepath){
+    std::ofstream imgFile(filepath, std::ios::binary);
+
+    if(!imgFile){
+        std::cerr << "Error [bake]: Couldn't create file at filepath" << filepath << "\n";
+        return false;
     }
+    int count = 0;
+    imgFile << "P6\n" << width << " " << height << "\n255\n";
+    imgFile.write(reinterpret_cast<char*>(pixels.data()), width * height * 3);
+    if(imgFile.fail()){
+        std::cerr << "Error [bake]: Something went wrong while saving file to " << filepath << "\n";
+        return false;
+    }
+    else
+        return true;
 }
 
 void Image::putPixel(int x, int y, Pixel color){
